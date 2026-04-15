@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Our Lifestyle Dashboard 🌿</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #fdf9f3;
+    --warm-white: #fffefb;
+    --beige: #f5efe6;
+    --beige-mid: #ede4d8;
+    --sage: #8fad91;
+    --sage-light: #c8ddc9;
+    --sage-pale: #e8f2e8;
+    --yellow-soft: #f7e7a3;
+    --yellow-warm: #f0d87a;
+    --blush: #f5d7d7;
+    --blush-light: #faeaea;
+    --lavender: #e0d9f0;
+    --lavender-mid: #c5b8e8;
+    --text-dark: #3a3228;
+    --text-mid: #6b5e52;
+    --text-soft: #9a8878;
+    --shadow-sm: 0 2px 12px rgba(100,80,60,0.07);
+    --shadow-md: 0 6px 28px rgba(100,80,60,0.10);
+    --radius: 20px;
+    --radius-sm: 12px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--cream);
+    color: var(--text-dark);
+    min-height: 100vh;
+    background-image: radial-gradient(ellipse at 20% 0%, #e8f2e820 0%, transparent 50%),
+                      radial-gradient(ellipse at 80% 100%, #faeaea18 0%, transparent 50%);
+  }
+
+  /* HEADER */
+  .header {
+    background: var(--warm-white);
+    border-bottom: 1.5px solid var(--beige-mid);
+    padding: 22px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: var(--shadow-sm);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+
+  .header-left h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.65rem;
+    color: var(--text-dark);
+    letter-spacing: -0.01em;
+  }
+
+  .header-left p {
+    font-size: 0.8rem;
+    color: var(--text-soft);
+    margin-top: 2px;
+    font-weight: 300;
+  }
+
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .week-label {
+    font-size: 0.8rem;
+    background: var(--beige);
+    color: var(--text-mid);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-weight: 500;
+  }
+
+  .edit-toggle {
+    background: var(--sage);
+    color: white;
+    border: none;
+    padding: 8px 20px;
+    border-radius: 20px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s;
+    letter-spacing: 0.02em;
+  }
+
+  .edit-toggle:hover { background: #7a9b7c; transform: translateY(-1px); }
+  .edit-toggle.active { background: var(--yellow-warm); color: var(--text-dark); }
+
+  /* MAIN LAYOUT */
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+    padding: 32px 40px;
+    max-width: 1400px;
+    margin: 0 auto;
+  }
+
+  .full-width { grid-column: 1 / -1; }
+
+  /* CARD */
+  .card {
+    background: var(--warm-white);
+    border-radius: var(--radius);
+    padding: 28px 30px;
+    box-shadow: var(--shadow-sm);
+    border: 1.5px solid var(--beige-mid);
+    transition: box-shadow 0.25s;
+  }
+
+  .card:hover { box-shadow: var(--shadow-md); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 22px;
+  }
+
+  .card-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.15rem;
+    color: var(--text-dark);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .card-title .emoji { font-size: 1.1rem; }
+
+  .user-badge {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 12px;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+  }
+
+  .badge-fina { background: var(--blush); color: #b06070; }
+  .badge-unzi { background: var(--lavender); color: #6a5aa0; }
+
+  /* DAYS HEADER */
+  .days-grid {
+    display: grid;
+    grid-template-columns: 1fr repeat(7, 36px);
+    gap: 6px;
+    align-items: center;
+    margin-bottom: 4px;
+  }
+
+  .day-label {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    text-align: center;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+  }
+
+  /* HABIT ROW */
+  .habit-row {
+    display: grid;
+    grid-template-columns: 1fr repeat(7, 36px);
+    gap: 6px;
+    align-items: center;
+    padding: 5px 0;
+    border-bottom: 1px solid var(--beige);
+    transition: background 0.15s;
+    border-radius: 8px;
+  }
+
+  .habit-row:last-child { border-bottom: none; }
+  .habit-row:hover { background: var(--beige); padding: 5px 8px; margin: 0 -8px; }
+
+  .habit-name {
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .habit-name input.rename-input {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    color: var(--text-dark);
+    border: 1.5px solid var(--sage-light);
+    border-radius: 6px;
+    padding: 2px 8px;
+    background: var(--sage-pale);
+    outline: none;
+    width: 140px;
+  }
+
+  /* CHECKBOX */
+  .habit-check {
+    width: 24px;
+    height: 24px;
+    border-radius: 7px;
+    border: 1.8px solid var(--beige-mid);
+    background: var(--warm-white);
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: auto;
+    transition: all 0.2s;
+    flex-shrink: 0;
+  }
+
+  .habit-check:hover { border-color: var(--sage); background: var(--sage-pale); }
+
+  .habit-check.checked {
+    background: var(--sage);
+    border-color: var(--sage);
+  }
+
+  .habit-check.checked::after {
+    content: '✓';
+    color: white;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  /* EDIT CONTROLS */
+  .remove-btn {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    border: none;
+    background: var(--blush);
+    color: #c06060;
+    cursor: pointer;
+    font-size: 0.9rem;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+    line-height: 1;
+    padding: 0;
+  }
+
+  .remove-btn:hover { background: #f5b8b8; }
+  body.edit-mode .remove-btn { display: flex; }
+
+  .add-habit-row {
+    display: none;
+    align-items: center;
+    gap: 10px;
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1.5px dashed var(--beige-mid);
+  }
+
+  body.edit-mode .add-habit-row { display: flex; }
+
+  .add-input {
+    flex: 1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    border: 1.5px solid var(--sage-light);
+    border-radius: 10px;
+    padding: 8px 14px;
+    background: var(--sage-pale);
+    color: var(--text-dark);
+    outline: none;
+  }
+
+  .add-input::placeholder { color: var(--text-soft); }
+
+  .add-btn {
+    background: var(--sage);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+
+  .add-btn:hover { background: #7a9b7c; }
+
+  /* WORKOUT SECTION */
+  .workout-days {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+
+  .workout-day-card {
+    background: var(--beige);
+    border-radius: var(--radius-sm);
+    padding: 14px 16px;
+    border: 1.5px solid var(--beige-mid);
+  }
+
+  .workout-day-name {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.07em;
+    color: var(--sage);
+    margin-bottom: 6px;
+  }
+
+  .workout-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 0.9rem;
+    color: var(--text-dark);
+    margin-bottom: 8px;
+  }
+
+  .workout-exercises {
+    list-style: none;
+  }
+
+  .workout-exercises li {
+    font-size: 0.75rem;
+    color: var(--text-mid);
+    padding: 2px 0;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .workout-exercises li::before {
+    content: '';
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--sage-light);
+    flex-shrink: 0;
+  }
+
+  .workout-check-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    padding-top: 8px;
+    border-top: 1px solid var(--beige-mid);
+  }
+
+  .workout-check-row label {
+    font-size: 0.75rem;
+    color: var(--text-soft);
+    cursor: pointer;
+  }
+
+  /* CYCLING TRACKER */
+  .cycling-log {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  .cycling-day-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    background: var(--beige);
+    border-radius: var(--radius-sm);
+    border: 1.5px solid var(--beige-mid);
+  }
+
+  .cycling-day-label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--text-mid);
+    width: 36px;
+    flex-shrink: 0;
+  }
+
+  .cycling-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 6px;
+    border: 1.8px solid var(--lavender-mid);
+    background: white;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s;
+  }
+
+  .cycling-check:hover { border-color: var(--lavender-mid); background: var(--lavender); }
+  .cycling-check.checked { background: var(--lavender-mid); border-color: var(--lavender-mid); }
+  .cycling-check.checked::after { content: '✓'; color: white; font-size: 0.72rem; font-weight: 700; }
+
+  .duration-input {
+    flex: 1;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.8rem;
+    border: 1.5px solid var(--beige-mid);
+    border-radius: 8px;
+    padding: 4px 10px;
+    background: white;
+    color: var(--text-dark);
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .duration-input:focus { border-color: var(--lavender-mid); }
+  .duration-unit { font-size: 0.72rem; color: var(--text-soft); }
+
+  /* PROGRESS SECTION */
+  .progress-overview {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+  }
+
+  .progress-stat {
+    background: var(--beige);
+    border-radius: var(--radius-sm);
+    padding: 18px 20px;
+    border: 1.5px solid var(--beige-mid);
+    text-align: center;
+  }
+
+  .progress-stat .stat-value {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    color: var(--text-dark);
+    line-height: 1;
+  }
+
+  .progress-stat .stat-label {
+    font-size: 0.72rem;
+    color: var(--text-soft);
+    margin-top: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    font-weight: 600;
+  }
+
+  /* PROGRESS BARS */
+  .progress-bars { display: flex; flex-direction: column; gap: 14px; }
+
+  .progress-bar-row { display: flex; flex-direction: column; gap: 6px; }
+
+  .progress-bar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .progress-bar-label {
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    font-weight: 500;
+  }
+
+  .progress-bar-pct {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-dark);
+  }
+
+  .progress-track {
+    height: 10px;
+    background: var(--beige-mid);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    border-radius: 10px;
+    transition: width 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+  }
+
+  .fill-fina { background: linear-gradient(90deg, #f5b8c8, #c8a0e0); }
+  .fill-unzi { background: linear-gradient(90deg, #a0b8e0, #8fad91); }
+  .fill-workout { background: linear-gradient(90deg, var(--sage), var(--sage-light)); }
+  .fill-nutrition { background: linear-gradient(90deg, #a0d0a0, #c8e8a0); }
+  .fill-selfcare { background: linear-gradient(90deg, #e0c8f0, #f0b8d8); }
+
+  /* RING CHARTS */
+  .rings-container {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    justify-content: center;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+
+  .ring-item { text-align: center; }
+
+  .ring-svg { transform: rotate(-90deg); }
+
+  .ring-bg { fill: none; stroke: var(--beige-mid); }
+  .ring-fill { fill: none; stroke-linecap: round; transition: stroke-dashoffset 0.8s cubic-bezier(0.34,1.56,0.64,1); }
+
+  .ring-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-soft);
+    margin-top: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .ring-pct {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+  }
+
+  /* MOTIVATION BANNER */
+  .motivation-banner {
+    background: linear-gradient(135deg, var(--yellow-soft) 0%, var(--sage-pale) 100%);
+    border-radius: var(--radius);
+    padding: 22px 30px;
+    border: 1.5px solid var(--yellow-warm);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .motivation-icon { font-size: 2rem; }
+
+  .motivation-text h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1rem;
+    color: var(--text-dark);
+    margin-bottom: 4px;
+  }
+
+  .motivation-text p {
+    font-size: 0.8rem;
+    color: var(--text-mid);
+    font-weight: 300;
+    font-style: italic;
+  }
+
+  /* SECTION DIVIDER */
+  .section-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-soft);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--beige-mid);
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; padding: 20px; }
+    .full-width { grid-column: 1; }
+    .workout-days { grid-template-columns: repeat(2, 1fr); }
+    .progress-overview { grid-template-columns: repeat(2, 1fr); }
+    .header { padding: 16px 20px; }
+    .header-left h1 { font-size: 1.3rem; }
+  }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card { animation: fadeUp 0.4s ease both; }
+  .card:nth-child(2) { animation-delay: 0.05s; }
+  .card:nth-child(3) { animation-delay: 0.1s; }
+  .card:nth-child(4) { animation-delay: 0.15s; }
+  .card:nth-child(5) { animation-delay: 0.2s; }
+  .card:nth-child(6) { animation-delay: 0.25s; }
+
+  .habit-check.pop {
+    animation: pop 0.25s cubic-bezier(0.34,1.56,0.64,1);
+  }
+
+  @keyframes pop {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.35); }
+    100% { transform: scale(1); }
+  }
+
+  /* SUNDAY HIGHLIGHT */
+  .sunday-col { background: var(--beige); border-radius: 6px; }
+
+  /* TODAY HIGHLIGHT */
+  .today-col .habit-check { border-color: var(--sage); }
+
+  /* SCROLLBAR */
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-track { background: var(--cream); }
+  ::-webkit-scrollbar-thumb { background: var(--beige-mid); border-radius: 3px; }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header class="header">
+  <div class="header-left">
+    <h1>🌿 Our Lifestyle Dashboard</h1>
+    <p id="date-display">Loading...</p>
+  </div>
+  <div class="header-right">
+    <div class="week-label" id="week-label">Week —</div>
+    <button class="edit-toggle" id="editToggle" onclick="toggleEdit()">✏️ Edit Mode</button>
+  </div>
+</header>
+
+<div class="main" id="mainGrid">
+
+  <!-- MOTIVATION BANNER -->
+  <div class="card full-width motivation-banner" style="padding: 20px 28px;">
+    <div class="motivation-icon">💛</div>
+    <div class="motivation-text">
+      <h3 id="motivationTitle">Progress, not perfection.</h3>
+      <p id="motivationQuote">Every small step is a step forward. You're building something beautiful, one day at a time.</p>
+    </div>
+  </div>
+
+  <!-- FINA HABITS -->
+  <div class="card" id="card-fina-habits">
+    <div class="card-header">
+      <div class="card-title"><span class="emoji">🌸</span> Fina's Daily Habits</div>
+      <span class="user-badge badge-fina">Fina</span>
+    </div>
+    <div id="fina-habit-tracker"></div>
+  </div>
+
+  <!-- BANG UNZI HABITS -->
+  <div class="card" id="card-unzi-habits">
+    <div class="card-header">
+      <div class="card-title"><span class="emoji">⚡</span> Bang Unzi's Daily Habits</div>
+      <span class="user-badge badge-unzi">Bang Unzi</span>
+    </div>
+    <div id="unzi-habit-tracker"></div>
+  </div>
+
+  <!-- FINA WORKOUT -->
+  <div class="card full-width">
+    <div class="card-header">
+      <div class="card-title"><span class="emoji">🏋️</span> Fina's Workout Plan</div>
+      <span class="user-badge badge-fina">Fina</span>
+    </div>
+    <div class="workout-days" id="fina-workouts"></div>
+  </div>
+
+  <!-- BANG UNZI CYCLING -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="emoji">🚴</span> Bang Unzi's Cycling Log</div>
+      <span class="user-badge badge-unzi">Bang Unzi</span>
+    </div>
+    <div class="cycling-log" id="cycling-log"></div>
+  </div>
+
+  <!-- HEALTH & NUTRITION -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="emoji">🌿</span> Health & Nutrition</div>
+    </div>
+    <div class="section-label">Fina</div>
+    <div id="nutrition-fina-tracker"></div>
+    <div class="section-label" style="margin-top:16px;">Bang Unzi</div>
+    <div id="nutrition-unzi-tracker"></div>
+  </div>
+
+  <!-- SELF-CARE -->
+  <div class="card">
+    <div class="card-header">
+      <div class="card-title"><span class="emoji">✨</span> Self-Care & Mindfulness</div>
+    </div>
+    <div class="section-label">Fina</div>
+    <div id="selfcare-fina-tracker"></div>
+    <div class="section-label" style="margin-top:16px;">Bang Unzi</div>
+    <div id="selfcare-unzi-tracker"></div>
+  </div>
+
+  <!-- WEEKLY PROGRESS -->
+  <div class="card full-width">
+    <div class="card-header">
+      <div class="card-title"><span class="emoji">📊</span> Weekly Progress Overview</div>
+    </div>
+
+    <div class="progress-overview" id="progress-stats"></div>
+
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 32px; margin-top: 8px;">
+      <div>
+        <div class="section-label">Progress Bars</div>
+        <div class="progress-bars" id="progress-bars"></div>
+      </div>
+      <div>
+        <div class="section-label">Completion Rings</div>
+        <div class="rings-container" id="progress-rings"></div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────────────────
+const DAYS = ['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+const TODAY_IDX = (new Date().getDay() + 6) % 7; // 0=Mon
+
+let state = {
+  finaHabits: [
+    { id:'fh1', name:'Morning stretch 🧘', checks: [0,0,0,0,0,0,0] },
+    { id:'fh2', name:'10k steps 👟', checks: [0,0,0,0,0,0,0] },
+    { id:'fh3', name:'Journaling 📓', checks: [0,0,0,0,0,0,0] },
+    { id:'fh4', name:'Read 20 min 📚', checks: [0,0,0,0,0,0,0] },
+    { id:'fh5', name:'No phone before bed 🌙', checks: [0,0,0,0,0,0,0] },
+  ],
+  unziHabits: [
+    { id:'uh1', name:'Morning routine ☀️', checks: [0,0,0,0,0,0,0] },
+    { id:'uh2', name:'Stay active 💪', checks: [0,0,0,0,0,0,0] },
+    { id:'uh3', name:'Read or learn 📖', checks: [0,0,0,0,0,0,0] },
+    { id:'uh4', name:'Limit screen time 📵', checks: [0,0,0,0,0,0,0] },
+  ],
+  nutritionFina: [
+    { id:'nf1', name:'Drink enough water 💧', checks: [0,0,0,0,0,0,0] },
+    { id:'nf2', name:'Eat balanced meals 🍽️', checks: [0,0,0,0,0,0,0] },
+    { id:'nf3', name:'Fruits or vegetables 🍎', checks: [0,0,0,0,0,0,0] },
+    { id:'nf4', name:'Limit sugar 🍬', checks: [0,0,0,0,0,0,0] },
+  ],
+  nutritionUnzi: [
+    { id:'nu1', name:'Drink enough water 💧', checks: [0,0,0,0,0,0,0] },
+    { id:'nu2', name:'Eat balanced meals 🍽️', checks: [0,0,0,0,0,0,0] },
+    { id:'nu3', name:'Fruits or vegetables 🍎', checks: [0,0,0,0,0,0,0] },
+    { id:'nu4', name:'Limit sugar 🍬', checks: [0,0,0,0,0,0,0] },
+  ],
+  selfcareFina: [
+    { id:'sf1', name:'Shower & body care ✨', checks: [0,0,0,0,0,0,0] },
+    { id:'sf2', name:'Affirmations 💬', checks: [0,0,0,0,0,0,0] },
+    { id:'sf3', name:'Study 📝', checks: [0,0,0,0,0,0,0] },
+    { id:'sf4', name:'Sleep 7–8 hours 😴', checks: [0,0,0,0,0,0,0] },
+  ],
+  selfcareUnzi: [
+    { id:'su1', name:'Shower & grooming ✨', checks: [0,0,0,0,0,0,0] },
+    { id:'su2', name:'Positive mindset 💬', checks: [0,0,0,0,0,0,0] },
+    { id:'su3', name:'Learn something new 📝', checks: [0,0,0,0,0,0,0] },
+    { id:'su4', name:'Sleep 7–8 hours 😴', checks: [0,0,0,0,0,0,0] },
+  ],
+  finaWorkoutChecks: { Mon:0, Tue:0, Wed:0, Thu:0, Fri:0, Sat:0 },
+  cycling: {
+    Mon: { done: 0, minutes: '' },
+    Tue: { done: 0, minutes: '' },
+    Wed: { done: 0, minutes: '' },
+    Thu: { done: 0, minutes: '' },
+    Fri: { done: 0, minutes: '' },
+    Sat: { done: 0, minutes: '' },
+    Sun: { done: 0, minutes: '' },
+  }
+};
+
+const FINA_WORKOUTS = {
+  Mon: { title: 'Lower Body', exercises: ['Squat','Lunges','Glute bridge','Step-up','Wall sit','10 min walk 🚶'] },
+  Tue: { title: 'Upper Body + Core', exercises: ['Push up','Plank','Shoulder tap','Russian twist','15 min cardio 🏃'] },
+  Wed: { title: 'Full Body', exercises: ['Squat','Push up','Mountain climber','Jumping jack','Plank','10 min walk 🚶'] },
+  Thu: { title: 'Lower Body', exercises: ['Squat','Donkey kick','Fire hydrant','Hip thrust','Calf raises','10 min walk 🚶'] },
+  Fri: { title: 'Core', exercises: ['Sit up','Leg raise','Bicycle crunch','Plank','Side plank','15 min cardio 🏃'] },
+  Sat: { title: 'Fun Workout 🎉', exercises: ['HIIT Dance 💃'] },
+};
+
+const MOTIVATIONS = [
+  { title: 'Progress, not perfection.', quote: 'Every small step is a step forward. You\'re building something beautiful, one day at a time.' },
+  { title: 'You\'re doing amazing! 🌟', quote: 'Consistency is the secret ingredient. Keep showing up for yourself.' },
+  { title: 'Believe in yourself. 💛', quote: 'Small habits, big changes. You\'ve got this, both of you.' },
+  { title: 'Rest is also productive. 🌙', quote: 'Taking care of yourself is the foundation of everything else you want to build.' },
+];
+
+// ── INIT ──────────────────────────────────────────────────────────────────────
+function init() {
+  setDateDisplay();
+  renderHabitTracker('fina-habit-tracker', 'finaHabits', 'fina');
+  renderHabitTracker('unzi-habit-tracker', 'unziHabits', 'unzi');
+  renderHabitTracker('nutrition-fina-tracker', 'nutritionFina', 'nf');
+  renderHabitTracker('nutrition-unzi-tracker', 'nutritionUnzi', 'nu');
+  renderHabitTracker('selfcare-fina-tracker', 'selfcareFina', 'sf');
+  renderHabitTracker('selfcare-unzi-tracker', 'selfcareUnzi', 'su');
+  renderWorkouts();
+  renderCycling();
+  updateProgress();
+  randomMotivation();
+}
+
+function setDateDisplay() {
+  const now = new Date();
+  const opts = { weekday:'long', year:'numeric', month:'long', day:'numeric' };
+  document.getElementById('date-display').textContent = now.toLocaleDateString('en-US', opts);
+  const startOfWeek = new Date(now);
+  startOfWeek.setDate(now.getDate() - ((now.getDay() + 6) % 7));
+  const endOfWeek = new Date(startOfWeek);
+  endOfWeek.setDate(startOfWeek.getDate() + 6);
+  const fmt = d => d.toLocaleDateString('en-US', { month:'short', day:'numeric' });
+  document.getElementById('week-label').textContent = `${fmt(startOfWeek)} – ${fmt(endOfWeek)}`;
+}
+
+function randomMotivation() {
+  const m = MOTIVATIONS[Math.floor(Math.random() * MOTIVATIONS.length)];
+  document.getElementById('motivationTitle').textContent = m.title;
+  document.getElementById('motivationQuote').textContent = m.quote;
+}
+
+// ── HABIT TRACKER RENDER ──────────────────────────────────────────────────────
+function renderHabitTracker(containerId, stateKey, prefix) {
+  const container = document.getElementById(containerId);
+  const habits = state[stateKey];
+  let html = `<div class="days-grid">
+    <div></div>
+    ${DAYS.map((d,i) => `<div class="day-label ${i===TODAY_IDX?'today-col':''}">${d}</div>`).join('')}
+  </div>`;
+
+  habits.forEach(habit => {
+    html += `<div class="habit-row" id="row-${habit.id}">
+      <div class="habit-name">
+        <button class="remove-btn" onclick="removeHabit('${stateKey}','${habit.id}','${containerId}','${prefix}')">×</button>
+        <span class="habit-label" id="label-${habit.id}">${habit.name}</span>
+      </div>
+      ${habit.checks.map((c,i) => `
+        <div class="habit-check ${c?'checked':''} ${i===TODAY_IDX?'today-col':''}" 
+             id="check-${habit.id}-${i}"
+             onclick="toggleHabit('${stateKey}','${habit.id}',${i},'${containerId}','${prefix}')"></div>
+      `).join('')}
+    </div>`;
+  });
+
+  html += `<div class="add-habit-row" id="add-row-${containerId}">
+    <input class="add-input" type="text" placeholder="Add new habit..." id="add-input-${containerId}" onkeydown="if(event.key==='Enter')addHabit('${stateKey}','${containerId}','${prefix}')">
+    <button class="add-btn" onclick="addHabit('${stateKey}','${containerId}','${prefix}')">+ Add</button>
+  </div>`;
+
+  container.innerHTML = html;
+}
+
+function toggleHabit(stateKey, habitId, dayIdx, containerId, prefix) {
+  const habit = state[stateKey].find(h => h.id === habitId);
+  if (!habit) return;
+  habit.checks[dayIdx] = habit.checks[dayIdx] ? 0 : 1;
+  const el = document.getElementById(`check-${habitId}-${dayIdx}`);
+  if (el) {
+    el.classList.toggle('checked', !!habit.checks[dayIdx]);
+    el.classList.add('pop');
+    setTimeout(() => el.classList.remove('pop'), 300);
+  }
+  updateProgress();
+}
+
+function addHabit(stateKey, containerId, prefix) {
+  const input = document.getElementById(`add-input-${containerId}`);
+  const name = input.value.trim();
+  if (!name) return;
+  const id = prefix + Date.now();
+  state[stateKey].push({ id, name, checks: [0,0,0,0,0,0,0] });
+  input.value = '';
+  renderHabitTracker(containerId, stateKey, prefix);
+  updateProgress();
+}
+
+function removeHabit(stateKey, habitId, containerId, prefix) {
+  state[stateKey] = state[stateKey].filter(h => h.id !== habitId);
+  renderHabitTracker(containerId, stateKey, prefix);
+  updateProgress();
+}
+
+// ── WORKOUTS ──────────────────────────────────────────────────────────────────
+function renderWorkouts() {
+  const container = document.getElementById('fina-workouts');
+  let html = '';
+  Object.entries(FINA_WORKOUTS).forEach(([day, w]) => {
+    const checked = state.finaWorkoutChecks[day];
+    html += `<div class="workout-day-card">
+      <div class="workout-day-name">${day}</div>
+      <div class="workout-title">${w.title}</div>
+      <ul class="workout-exercises">${w.exercises.map(e => `<li>${e}</li>`).join('')}</ul>
+      <div class="workout-check-row">
+        <div class="habit-check ${checked?'checked':''}" id="wcheck-${day}" onclick="toggleWorkout('${day}')"></div>
+        <label onclick="toggleWorkout('${day}')">Completed ✓</label>
+      </div>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function toggleWorkout(day) {
+  state.finaWorkoutChecks[day] = state.finaWorkoutChecks[day] ? 0 : 1;
+  const el = document.getElementById(`wcheck-${day}`);
+  if (el) {
+    el.classList.toggle('checked', !!state.finaWorkoutChecks[day]);
+    el.classList.add('pop');
+    setTimeout(() => el.classList.remove('pop'), 300);
+  }
+  updateProgress();
+}
+
+// ── CYCLING ──────────────────────────────────────────────────────────────────
+function renderCycling() {
+  const container = document.getElementById('cycling-log');
+  let html = '';
+  DAYS.forEach(day => {
+    const c = state.cycling[day];
+    html += `<div class="cycling-day-row">
+      <div class="cycling-day-label">${day}</div>
+      <div class="cycling-check ${c.done?'checked':''}" id="cyclecheck-${day}" onclick="toggleCycle('${day}')"></div>
+      <input class="duration-input" type="number" placeholder="Duration" min="0" max="999"
+             value="${c.minutes}" onchange="setCycleDuration('${day}', this.value)" style="width:80px;">
+      <span class="duration-unit">min</span>
+    </div>`;
+  });
+  container.innerHTML = html;
+}
+
+function toggleCycle(day) {
+  state.cycling[day].done = state.cycling[day].done ? 0 : 1;
+  const el = document.getElementById(`cyclecheck-${day}`);
+  if (el) {
+    el.classList.toggle('checked', !!state.cycling[day].done);
+    el.classList.add('pop');
+    setTimeout(() => el.classList.remove('pop'), 300);
+  }
+  updateProgress();
+}
+
+function setCycleDuration(day, val) {
+  state.cycling[day].minutes = val;
+}
+
+// ── PROGRESS ──────────────────────────────────────────────────────────────────
+function calcPct(habits) {
+  const total = habits.length * 7;
+  if (total === 0) return 0;
+  const done = habits.reduce((s, h) => s + h.checks.reduce((a,b) => a+b, 0), 0);
+  return Math.round((done / total) * 100);
+}
+
+function calcWorkoutPct() {
+  const done = Object.values(state.finaWorkoutChecks).filter(v => v).length;
+  return Math.round((done / 6) * 100);
+}
+
+function calcCyclePct() {
+  const done = Object.values(state.cycling).filter(c => c.done).length;
+  return Math.round((done / 7) * 100);
+}
+
+function updateProgress() {
+  const finaPct = calcPct([...state.finaHabits, ...state.nutritionFina, ...state.selfcareFina]);
+  const unziPct = calcPct([...state.unziHabits, ...state.nutritionUnzi, ...state.selfcareUnzi]);
+  const workoutPct = calcWorkoutPct();
+  const nutritionPct = calcPct([...state.nutritionFina, ...state.nutritionUnzi]);
+  const selfcarePct = calcPct([...state.selfcareFina, ...state.selfcareUnzi]);
+
+  // Stats
+  const totalChecks = [...state.finaHabits,...state.unziHabits,...state.nutritionFina,...state.nutritionUnzi,...state.selfcareFina,...state.selfcareUnzi]
+    .reduce((s,h) => s + h.checks.reduce((a,b)=>a+b,0), 0);
+  const workoutsDone = Object.values(state.finaWorkoutChecks).filter(v=>v).length;
+  const cyclingDays = Object.values(state.cycling).filter(c=>c.done).length;
+  const totalMins = Object.values(state.cycling).reduce((s,c) => s + (parseInt(c.minutes)||0), 0);
+
+  document.getElementById('progress-stats').innerHTML = `
+    <div class="progress-stat">
+      <div class="stat-value">${totalChecks}</div>
+      <div class="stat-label">Habits Done</div>
+    </div>
+    <div class="progress-stat">
+      <div class="stat-value">${workoutsDone}</div>
+      <div class="stat-label">Workouts ✓</div>
+    </div>
+    <div class="progress-stat">
+      <div class="stat-value">${cyclingDays}</div>
+      <div class="stat-label">Cycling Days</div>
+    </div>
+    <div class="progress-stat">
+      <div class="stat-value">${totalMins}<span style="font-size:1rem">m</span></div>
+      <div class="stat-label">Cycling Mins</div>
+    </div>
+  `;
+
+  const bars = [
+    { label: '🌸 Fina — Overall', pct: finaPct, cls: 'fill-fina' },
+    { label: '⚡ Bang Unzi — Overall', pct: unziPct, cls: 'fill-unzi' },
+    { label: '🏋️ Fina\'s Workouts', pct: workoutPct, cls: 'fill-workout' },
+    { label: '🌿 Nutrition', pct: nutritionPct, cls: 'fill-nutrition' },
+    { label: '✨ Self-Care', pct: selfcarePct, cls: 'fill-selfcare' },
+  ];
+
+  document.getElementById('progress-bars').innerHTML = bars.map(b => `
+    <div class="progress-bar-row">
+      <div class="progress-bar-header">
+        <span class="progress-bar-label">${b.label}</span>
+        <span class="progress-bar-pct">${b.pct}%</span>
+      </div>
+      <div class="progress-track">
+        <div class="progress-fill ${b.cls}" style="width:${b.pct}%"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // Rings
+  const rings = [
+    { label: 'Fina', pct: finaPct, color: '#c8a0e0' },
+    { label: 'Bang Unzi', pct: unziPct, color: '#8fad91' },
+    { label: 'Workout', pct: workoutPct, color: '#a0d0a0' },
+    { label: 'Nutrition', pct: nutritionPct, color: '#f0b8d8' },
+  ];
+
+  const r = 30, circ = 2 * Math.PI * r;
+  document.getElementById('progress-rings').innerHTML = rings.map(ring => {
+    const offset = circ - (ring.pct / 100) * circ;
+    return `<div class="ring-item">
+      <svg width="80" height="80" viewBox="0 0 80 80" class="ring-svg">
+        <circle class="ring-bg" cx="40" cy="40" r="${r}" stroke-width="8"/>
+        <circle class="ring-fill" cx="40" cy="40" r="${r}" stroke-width="8"
+                stroke="${ring.color}"
+                stroke-dasharray="${circ}"
+                stroke-dashoffset="${offset}"/>
+        <text x="40" y="40" text-anchor="middle" dominant-baseline="central"
+              font-family="Playfair Display,serif" font-size="13" fill="#3a3228"
+              transform="rotate(90,40,40)">${ring.pct}%</text>
+      </svg>
+      <div class="ring-label">${ring.label}</div>
+    </div>`;
+  }).join('');
+}
+
+// ── EDIT MODE ──────────────────────────────────────────────────────────────────
+function toggleEdit() {
+  document.body.classList.toggle('edit-mode');
+  const btn = document.getElementById('editToggle');
+  const isEdit = document.body.classList.contains('edit-mode');
+  btn.textContent = isEdit ? '✅ Done Editing' : '✏️ Edit Mode';
+  btn.classList.toggle('active', isEdit);
+}
+
+// ── START ──────────────────────────────────────────────────────────────────────
+init();
+</script>
+</body>
+</html>
